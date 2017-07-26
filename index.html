@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="зеркало, фон, клиент, мем, дизайн, дизайнер" name="keywords">
+    <meta content="Как сделать зеркальный фон" name="description">
+    <meta content="Зеркальный фон" name="title">
+    
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <title>Зеркальный фон</title>
+
+    <style>
+        html, body, #container, #filter, #videoElement {
+            height: 100%;
+            width: 100%;
+            min-width: 100%;
+            min-height: 100%;
+            margin: 0;
+        }
+        
+        body {
+            overflow: hidden;
+            font: 12px/18px "Open Sans","Lucida Grande","Lucida Sans Unicode",Arial,Helvetica,Verdana,sans-serif;;
+        }
+        
+        #container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #mem, #linkInput {
+            max-width: 50%;
+        }
+        
+        #shareWrapper {
+            position: absolute;
+            opacity: 1;
+            bottom: 4px;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            transition-property: opacity;
+            transition-duration: 1s;
+            transition-timing-function: ease;
+        }
+        
+        #shareWrapper.hidden {
+            opacity: 0;
+        }
+        
+        #shareWrapper.notify #notification {
+            opacity: 1;
+        }
+        
+        #shareWrapper > div {
+            width: 50%;
+            margin: 0 auto;
+        }
+        
+        #notification {
+            opacity: 0;
+            transition-property: opacity;
+            transition-duration: 1s;
+            transition-timing-function: ease;
+        }
+        
+        #shareWrapper .center {
+            text-align: center;
+        }
+        
+        #linkInput {
+            line-height: 2;
+            font-size: 2;
+            padding: 0 1em;
+        }
+
+        #filter {
+            position: absolute;
+            z-index: 5;
+            left: 0;
+            top: 0;
+            opacity: .7;
+            filter: blur(7px);
+            background: lightpink;
+        }
+
+        #videoElement {
+            width: 100%;
+            min-width: 100%;
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div id="filter">
+            <video autoplay id="videoElement">
+            </video>
+        </div>
+        <img src="./mem.jpg" alt="Зеркальный фон, пожалуйста" id="mem" />
+    </div>
+    <div id="shareWrapper">
+        <div>
+            <label>
+                <h2 class="center">Поделиться</span>
+                <input id="linkInput" type="text" value="https://goo.gl/ZZA4Dg" autofocus readonly />
+            </label>
+            <div id="notification">Скопировано</div>
+        </div>
+    </div>
+<script>
+    const navigator = window.navigator
+    const video = document.querySelector('#videoElement')
+    const shares = document.querySelector('#shareWrapper')
+    
+    function handlerOnClick (e) {
+        this.setSelectionRange(0, this.value.length)
+        document.execCommand("copy")
+        shares.classList.toggle('notify')
+        setTimeout(function () {
+            shares.classList.toggle('notify')
+            shares.classList.toggle('hidden')
+            setTimeout(function(){
+                shares.hidden = true
+                shares.classList.toggle('hidden')
+            }, 1000)
+        }, 3000)
+
+    }
+    
+    document.querySelector('#linkInput').addEventListener('click', handlerOnClick)
+
+    if (navigator.getUserMedia) {
+        navigator.getUserMedia({ video: true }, handleVideo, videoError)
+    }
+
+    function handleVideo(stream) {
+        video.src = window.URL.createObjectURL(stream)
+        console.log(window.URL.createObjectURL(stream))
+    }
+
+    function videoError(e) {
+        console.log('Some kind of error')
+    }
+    
+    setTimeout(function() {shares.hidden = false}, 30000)
+</script>
+</body>
+</html>
